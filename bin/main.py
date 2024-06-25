@@ -7,6 +7,7 @@ Neetre 2024
 import customtkinter
 import csv
 from icecream import ic
+from preprocess import pre
 
 ic.disable()
 
@@ -27,8 +28,12 @@ class Currency_manager:
     def see_curr(self, name_curr):
         curr = [value.name for value in self.values if value.name == name_curr][0]
         return curr
+    
+    def retrive_curr(self):
+        return [value.name for value in self.values]
 
     def estraz(self, f_csv):
+        # pre()
         with open(f_csv, "r") as file:
             reader = csv.DictReader(file)
             for row in reader:
@@ -49,7 +54,7 @@ class Currency_manager:
 
 
 class FromFrame(customtkinter.CTkFrame):
-    def __init__(self, master, title, cur):
+    def __init__(self, master, title: str, cur: list):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
         self.title = title
@@ -99,29 +104,35 @@ class ToFrame(customtkinter.CTkFrame):
     def get_choice(self):
         choice = self.combobox.get()
         return choice
+    
+    def update_result(self, new_result):
+        self.textbox.delete("0.0", "end")
+        self.textbox.insert("0.0", new_result)
 
 
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.result = ''
+
         self.curr_manager = Currency_manager()
         f_csv = "../data/currencies.csv"
         self.curr_manager.estraz(f_csv)
-        
+        self.cur = self.curr_manager.retrive_curr()
+
         self.title("Convertor")
-        self.geometry("640x480")
+        self.geometry("400x220")
         self.grid_columnconfigure((0, 2), weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        self.from_frame = FromFrame(self, "From", self.curr_manager.values)
+        self.from_frame = FromFrame(self, "From", self.cur)
         self.from_frame.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsew")
 
         self.label = customtkinter.CTkLabel(self, text="=")
-        self.label.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="nsew")
+        self.label.grid(row=0, column=1, padx=10, pady=10, sticky="ew", columnspan=1)
 
-        self.to_frame = ToFrame(self, "To", self.curr_manager.values, self.result)
-        self.to_frame.grid(row=3, column=0, padx=10, pady=10, sticky="ew", columnspan=3)
+        self.to_frame = ToFrame(self, "To", self.cur, self.result)
+        self.to_frame.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="nsew")
 
         self.button = customtkinter.CTkButton(self, text="Convert", command=self.button_callback)
         self.button.grid(row=3, column=0, padx=10, pady=10, sticky="ew", columnspan=3)
@@ -130,8 +141,7 @@ class App(customtkinter.CTk):
         print(f"1: {self.from_frame.get_choice()[0]} ; {self.from_frame.get_choice()[1]}")
         print(f"2: {self.to_frame.get_choice()}")
         self.elabor()
-        self.to_frame = ToFrame(self, "To", self.curr_manager.values, self.result)
-        self.to_frame.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="nsew")
+        self.to_frame.update_result(self.result)
     
     def app_get(self):
         name_values = (self.from_frame.get_choice()[0], self.to_frame.get_choice())
@@ -141,7 +151,7 @@ class App(customtkinter.CTk):
     def elabor(self):
         name_values, value_to_convert = self.app_get()
         value_to_convert = int(value_to_convert.replace("\n", ""))
-        self.result = self.curr_manager.elab(name_values[0], name_values[1], value_to_convert)
+        self.result = self.curr_manager.conversion(name_values[0], name_values[1], value_to_convert)
 
 '''
 def main():
