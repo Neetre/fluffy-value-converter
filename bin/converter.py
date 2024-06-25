@@ -203,7 +203,7 @@ def cli():
         print(f"Conversion from {from_} to {to_}, value {value}.")
 
         result = curr_manager.conversion(from_, to_, value)
-        print("Conversion: ", result)
+        print(f"Conversion: {result} {to_}.")
 
         q = input("Do you want to continue? (y/n): ")
         if q == "n":
