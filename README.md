@@ -21,7 +21,8 @@ python >= 3.8
 * Windows: `./start_Windows.bat`
 * Linux/macOS: `./start_Linux.sh`
 
-These scripts will install required dependencies, and build a virtual environment for you if you don't have one. They will also start the app automatically.
+These scripts will install required dependencies, and build a virtual environment for you if you don't have one.
+They will also start the app automatically.
 
 ## Running the Program (CLI or GUI)
 
