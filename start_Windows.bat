@@ -12,7 +12,7 @@ IF ERRORLEVEL 1 (
     EXIT /B 1
 )
 
-SET /P UserInput=Do you want to run the program in GUI mode? (y/n):
+SET /P UserInput="Do you want to run the program in GUI mode? (y/n)":
 IF /I "%UserInput%" EQU "y" GOTO GUI
 IF /I "%UserInput%" EQU "n" GOTO CLI
 
