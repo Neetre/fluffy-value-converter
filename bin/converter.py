@@ -51,8 +51,11 @@ class CurrencyManager:
                 self.values.append(currency)
 
     def conversion(self, from_: str, to_: str, num: float) -> str:
-        from_ = [obj for obj in self.values if obj.name == from_][0]
-        to_ = [obj for obj in self.values if obj.name == to_][0]
+        try:
+            from_ = [obj for obj in self.values if obj.name == from_][0]
+            to_ = [obj for obj in self.values if obj.name == to_][0]
+        except IndexError:
+            return "Currency not found."
         num = num / from_.value
         num = num * to_.value
         valore = f"{num:.2f}"
